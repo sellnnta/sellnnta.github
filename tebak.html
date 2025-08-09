@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Tebak Angka</title>
+    <style>
+        /* Reset default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, rgb(240, 80, 176), #e780c8); /* Gradient background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            width: 300px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.5s ease;
+        }
+
+        .game-container:hover {
+            transform: scale(1.05);
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #ff4081;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input {
+            width: 80%;
+            padding: 12px;
+            font-size: 18px;
+            border: 2px solid #ff4081;
+            border-radius: 10px;
+            background: #fff;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #ff80ab;
+            box-shadow: 0 0 5px rgba(255, 128, 171, 0.8);
+        }
+
+        button {
+            width: 80%;
+            padding: 14px;
+            font-size: 18px;
+            background: #ff4081;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s;
+        }
+
+        button:hover {
+            background: #ff80ab;
+            transform: translateY(-5px);
+        }
+
+        #feedback {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        #attempts {
+            font-size: 16px;
+            margin-top: 10px;
+            color: #ff80ab;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Game Tebak Angka</h1>
+        <p>Ayo tebak angka antara 1 dan 100!</p>
+        <input type="number" id="input-tebakan" placeholder="Masukkan tebakanmu" />
+        <button onclick="cekTebakan()">Tebak!</button>
+        <p id="feedback"></p>
+        <p id="attempts"></p>
+    </div>
+    <script>
+        let angkaRahasia = Math.floor(Math.random() * 100) + 1;
+        let attempts = 0;
+
+        function cekTebakan() {
+            const tebakan = document.getElementById("input-tebakan").value;
+            const feedback = document.getElementById("feedback");
+            const attemptsText = document.getElementById("attempts");
+
+            if (tebakan === "") {
+                feedback.textContent = "Tolong masukkan angka!";
+                feedback.style.color = "red";
+                return;
+            }
+
+            attempts++;
+
+            if (tebakan < angkaRahasia) {
+                feedback.textContent = "Tebakanmu terlalu rendah!";
+                feedback.style.color = "#ff80ab";  // Soft pink for low guesses
+            } else if (tebakan > angkaRahasia) {
+                feedback.textContent = "Tebakanmu terlalu tinggi!";
+                feedback.style.color = "#ff80ab";  // Soft pink for high guesses
+            } else {
+                feedback.textContent = `Selamat! Angka yang benar adalah ${angkaRahasia}.`;
+                feedback.style.color = "#ff4081";  // Soft pink for high guesses
+                attemptsText.textContent = `Kamu berhasil dalam ${attempts} percobaan.`;
+                return;
+            }
+
+            attemptsText.textContent = `Percobaan ke-${attempts}`;
+        }
+    </script>
+</body>
+</html>
