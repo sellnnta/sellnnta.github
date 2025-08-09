@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Pink Bird</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #ff99cc, #ff66b2);
+            font-family: 'Poppins', sans-serif;
+        }
+        canvas {
+            background: url('https://i.imgur.com/H9EC3S2.jpeg') center/cover no-repeat;
+            border: 4px solid white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .game-over {
+            position: absolute;
+            display: none;
+            background: rgba(255, 51, 133, 0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 24px;
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .game-over button {
+            margin-top: 10px;
+            background: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            color: #ff3385;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .game-over button:hover {
+            background: #ff66b2;
+            color: white;
+        }
+        /* Menu tombol game lain */
+        .menu-container {
+            margin-top: 15px;
+            text-align: center;
+        }
+        .menu-btn {
+            background: #ff80ab;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .menu-btn:hover {
+            background: #ff4081;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="320" height="480"></canvas>
+    <div id="gameOverScreen" class="game-over">
+        <p id="gameOverText">yahh kalah! Skor: 0</p>
+        <button onclick="restartGame()">coba lagii</button>
+    </div>
+
+    <!-- Menu Game Lain -->
+    <div class="menu-container">
+        <h3 style="color:white;">pilih game lain:</h3>
+        <button class="menu-btn" onclick="location.href='index.html'">🎯 tebak angka</button>
+        <button class="menu-btn" onclick="location.href='puzzle.html'">🧩 sliding puzzle</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        const gameOverScreen = document.getElementById("gameOverScreen");
+        const gameOverText = document.getElementById("gameOverText");
+
+        let bird = { x: 50, y: 150, width: 30, height: 30, gravity: 0.8, lift: -12, velocity: 0 };
+        let pipes = [];
+        let frame = 0;
+        let score = 0;
+        let gameOver = false;
+
+        document.addEventListener("keydown", () => bird.velocity = bird.lift);
+        document.addEventListener("click", () => bird.velocity = bird.lift);
+
+        function drawBird() {
+            ctx.fillStyle = "pink";
+            ctx.beginPath();
+            ctx.arc(bird.x, bird.y, bird.width / 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function drawPipes() {
+            ctx.fillStyle = "#ff3385";
+            pipes.forEach(pipe => {
+                ctx.fillRect(pipe.x, 0, 30, pipe.top);
+                ctx.fillRect(pipe.x, pipe.bottom, 30, canvas.height - pipe.bottom);
+            });
+        }
+
+        function updateGame() {
+            if (gameOver) return;
+            
+            bird.velocity += bird.gravity;
+            bird.y += bird.velocity;
+            
+            if (frame % 120 === 0) {
+                let gap = 140;
+                let topHeight = Math.random() * (canvas.height / 2);
+                pipes.push({ x: canvas.width, top: topHeight, bottom: topHeight + gap });
+            }
+
+            pipes.forEach(pipe => {
+                pipe.x -= 2;
+                
+                if (pipe.x + 30 < 0) {
+                    pipes.shift();
+                    score++;
+                }
+                
+                if (
+                    (bird.x < pipe.x + 30 && bird.x + bird.width > pipe.x && 
+                    (bird.y < pipe.top || bird.y + bird.height > pipe.bottom)) || 
+                    bird.y + bird.height > canvas.height
+                ) {
+                    gameOver = true;
+                    gameOverText.textContent = `Game Over! Skor: ${score}`;
+                    gameOverScreen.style.display = "block";
+                }
+            });
+            
+            frame++;
+        }
+
+        function drawScore() {
+            ctx.fillStyle = "white";
+            ctx.font = "20px Arial";
+            ctx.fillText("Score: " + score, 10, 30);
+        }
+
+        function restartGame() {
+            location.reload();
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBird();
+            drawPipes();
+            drawScore();
+            updateGame();
+            if (!gameOver) requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
+</body>
+</html>

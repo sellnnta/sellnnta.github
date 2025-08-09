@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sliding Puzzle</title>
+    <style>
+        body { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            background: linear-gradient(135deg, #ff99cc, #ff66b2);
+            font-family: 'Poppins', sans-serif;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        h1 {
+            color: white;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 26px;
+        }
+        .puzzle-container { 
+            display: grid; 
+            grid-template-columns: repeat(3, 100px); 
+            grid-template-rows: repeat(3, 100px); 
+            gap: 5px; 
+            position: relative;
+        }
+        .tile { 
+            width: 100px; 
+            height: 100px; 
+            background: white; 
+            border: 2px solid black; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 24px; 
+            cursor: pointer; 
+            position: absolute;
+            transition: transform 0.3s;
+            border-radius: 8px;
+        }
+        .completion-message { 
+            margin-top: 20px; 
+            font-size: 20px; 
+            font-weight: bold; 
+            color: white; 
+            background: #ff69b4; 
+            padding: 10px; 
+            border-radius: 10px; 
+            text-align: center; 
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Tombol navigasi */
+        .menu-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .menu-btn {
+            background: #ff80ab;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .menu-btn:hover {
+            background: #ff4081;
+        }
+
+        /* Responsif untuk HP kecil */
+        @media (max-width: 400px) {
+            .puzzle-container {
+                grid-template-columns: repeat(3, 80px);
+                grid-template-rows: repeat(3, 80px);
+            }
+            .tile {
+                width: 80px;
+                height: 80px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🧩 Sliding Puzzle</h1>
+    <div class="puzzle-container" id="puzzle"></div>
+
+    <!-- Navigasi Game -->
+    <div class="menu-container">
+        <h3 style="color:white;">pilih game lain:</h3>
+        <button class="menu-btn" onclick="location.href='index.html'">🎯 tebak angka</button>
+        <button class="menu-btn" onclick="location.href='bird.html'">🐦 flappy pink bird</button>
+    </div>
+
+    <script>
+        const gridSize = 3;
+        let tiles = [];
+        let emptyTile = { x: gridSize - 1, y: gridSize - 1 };
+        let isShuffling = false;
+
+        function createGrid() {
+            const container = document.getElementById("puzzle");
+            container.innerHTML = "";
+            tiles = [];
+
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    if (x === emptyTile.x && y === emptyTile.y) continue;
+                    const tile = document.createElement("div");
+                    tile.classList.add("tile");
+                    tile.textContent = y * gridSize + x + 1;
+                    tile.dataset.x = x;
+                    tile.dataset.y = y;
+                    tile.style.transform = `translate(${x * 105}px, ${y * 105}px)`;
+                    tile.addEventListener("click", moveTile);
+                    container.appendChild(tile);
+                    tiles.push(tile);
+                }
+            }
+            shuffleTiles();
+        }
+
+        function moveTile(event) {
+            const tile = event.target;
+            const tileX = parseInt(tile.dataset.x);
+            const tileY = parseInt(tile.dataset.y);
+
+            if (isMovable(tileX, tileY)) {
+                tile.dataset.x = emptyTile.x;
+                tile.dataset.y = emptyTile.y;
+                tile.style.transform = `translate(${emptyTile.x * 105}px, ${emptyTile.y * 105}px)`;
+                emptyTile = { x: tileX, y: tileY };
+                if (!isShuffling) checkCompletion();
+            }
+        }
+
+        function isMovable(x, y) {
+            return (Math.abs(x - emptyTile.x) + Math.abs(y - emptyTile.y)) === 1;
+        }
+
+        function shuffleTiles() {
+            isShuffling = true;
+            for (let i = 0; i < 100; i++) {
+                const neighbors = tiles.filter(tile => isMovable(parseInt(tile.dataset.x), parseInt(tile.dataset.y)));
+                if (neighbors.length > 0) {
+                    const randomTile = neighbors[Math.floor(Math.random() * neighbors.length)];
+                    randomTile.click();
+                }
+            }
+            isShuffling = false;
+        }
+
+        function checkCompletion() {
+            let isComplete = true;
+            tiles.forEach((tile, index) => {
+                const x = index % gridSize;
+                const y = Math.floor(index / gridSize);
+                if (parseInt(tile.dataset.x) !== x || parseInt(tile.dataset.y) !== y) {
+                    isComplete = false;
+                }
+            });
+
+            if (isComplete) {
+                showCompletionMessage();
+            }
+        }
+
+        function showCompletionMessage() {
+            const message = document.createElement("div");
+            message.classList.add("completion-message");
+            message.textContent = "🎉 congratss! gegee! 🎉";
+            document.body.appendChild(message);
+
+            setTimeout(() => {
+                message.remove();
+                resetGame();
+            }, 3000);
+        }
+
+        function resetGame() {
+            emptyTile = { x: gridSize - 1, y: gridSize - 1 };
+            createGrid();
+        }
+
+        createGrid();
+    </script>
+</body>
+</html>
