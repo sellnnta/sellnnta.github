@@ -14,7 +14,7 @@
 
       body {
         font-family: "Poppins", sans-serif;
-        background: linear-gradient(135deg, rgb(240, 80, 176), #e780c8); /* Gradient background */
+        background: linear-gradient(135deg, rgb(240, 80, 176), #e780c8);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -28,7 +28,7 @@
         border-radius: 20px;
         padding: 40px;
         text-align: center;
-        width: 300px;
+        width: 320px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         backdrop-filter: blur(10px);
         transition: all 0.5s ease;
@@ -98,17 +98,44 @@
         margin-top: 10px;
         color: #ff80ab;
       }
+
+      /* Menu game lain */
+      .game-menu {
+        margin-top: 30px;
+      }
+      .menu-btn {
+        background: #ff80ab;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        margin: 5px;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .menu-btn:hover {
+        background: #ff4081;
+      }
     </style>
   </head>
   <body>
     <div class="game-container">
       <h1>Game Tebak Angka</h1>
       <p>halaw firmann, ayo coba tebak angka antara 1 sampe 100!!!</p>
-      <input type="number" id="input-tebakan" placeholder="Masukkan tebakanmu" />
-      <button onclick="cekTebakan()">Tebak!</button>
+      <input type="number" id="input-tebakan" placeholder="masukkin tebakanmu" />
+      <button onclick="cekTebakan()">tebak!!!!</button>
       <p id="feedback"></p>
       <p id="attempts"></p>
+
+      <!-- Menu Pilihan Game -->
+      <div class="game-menu">
+        <h2 style="color:#ff4081; font-size:18px;">pilih game lain:</h2>
+        <button class="menu-btn" onclick="location.href='bird.html'">🐦 flappy pink bird</button>
+        <button class="menu-btn" onclick="location.href='puzzle.html'">🧩 sliding puzzle</button>
+      </div>
     </div>
+
     <script>
       let angkaRahasia = Math.floor(Math.random() * 100) + 1;
       let attempts = 0;
@@ -119,7 +146,7 @@
         const attemptsText = document.getElementById("attempts");
 
         if (tebakan === "") {
-          feedback.textContent = "Tolong masukkan angka!";
+          feedback.textContent = "masukkin angkanyaa!";
           feedback.style.color = "red";
           return;
         }
@@ -127,19 +154,19 @@
         attempts++;
 
         if (tebakan < angkaRahasia) {
-          feedback.textContent = "Tebakanmu terlalu rendah!";
-          feedback.style.color = "#ff80ab"; // Soft pink for low guesses
+          feedback.textContent = "tebakanmu terlalu rendahh!";
+          feedback.style.color = "#ff80ab";
         } else if (tebakan > angkaRahasia) {
-          feedback.textContent = "Tebakanmu terlalu tinggi!";
-          feedback.style.color = "#ff80ab"; // Soft pink for high guesses
+          feedback.textContent = "ketinggiann gais!";
+          feedback.style.color = "#ff80ab";
         } else {
-          feedback.textContent = `Selamat! Angka yang benar adalah ${angkaRahasia}.`;
-          feedback.style.color = "#ff4081"; // Soft pink for high guesses
-          attemptsText.textContent = `Kamu berhasil dalam ${attempts} percobaan.`;
+          feedback.textContent = `yayy gege! angka yang benar adalah ${angkaRahasia}.`;
+          feedback.style.color = "#ff4081";
+          attemptsText.textContent = `km berhasil dalam ${attempts} percobaan.`;
           return;
         }
 
-        attemptsText.textContent = `Percobaan ke-${attempts}`;
+        attemptsText.textContent = `percobaan ke-${attempts}`;
       }
     </script>
   </body>
