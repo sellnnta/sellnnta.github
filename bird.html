@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flappy Pink Bird</title>
+    <title>Flappy Pink Bird - Slow Mode</title>
     <style>
         body {
             margin: 0;
@@ -91,7 +91,8 @@
         const gameOverScreen = document.getElementById("gameOverScreen");
         const gameOverText = document.getElementById("gameOverText");
 
-        let bird = { x: 50, y: 150, width: 30, height: 30, gravity: 0.8, lift: -12, velocity: 0 };
+        // Burung lebih ringan & loncat lebih halus
+        let bird = { x: 50, y: 150, width: 30, height: 30, gravity: 0.4, lift: -8, velocity: 0 };
         let pipes = [];
         let frame = 0;
         let score = 0;
@@ -121,15 +122,15 @@
             bird.velocity += bird.gravity;
             bird.y += bird.velocity;
             
-            if (frame % 120 === 0) {
-                let gap = 140;
+            // Tambah pipa tiap 150 frame (lebih jarang)
+            if (frame % 150 === 0) {
+                let gap = 150;
                 let topHeight = Math.random() * (canvas.height / 2);
                 pipes.push({ x: canvas.width, top: topHeight, bottom: topHeight + gap });
             }
 
             pipes.forEach(pipe => {
-                pipe.x -= 2;
-                
+                pipe.x -= 1; // lebih lambat
                 if (pipe.x + 30 < 0) {
                     pipes.shift();
                     score++;
