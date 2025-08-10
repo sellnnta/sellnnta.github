@@ -154,20 +154,20 @@
         attempts++;
 
         if (tebakan < angkaRahasia) {
-          feedback.textContent = "tebakanmu terlalu rendahh!";
+          feedback.textContent = " terlalu rendah pirman!";
           feedback.style.color = "#ff80ab";
         } else if (tebakan > angkaRahasia) {
-          feedback.textContent = "ketinggiann gais!";
+          feedback.textContent = "ketinggiannnnn!";
           feedback.style.color = "#ff80ab";
         } else {
           feedback.textContent = `yayy gege! angka yang benar adalah ${angkaRahasia}.`;
           feedback.style.color = "#ff4081";
           attemptsText.textContent = `km berhasil dalam ${attempts} percobaan.`;
-          return;
+          return;  
         }
 
         attemptsText.textContent = `percobaan ke-${attempts}`;
       }
     </script>
-  </body>
+  </body>  
 </html>
