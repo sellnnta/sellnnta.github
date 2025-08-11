@@ -12,7 +12,61 @@
   gtag('js', new Date());
 
   gtag('config', 'G-TDKVR9BY1D');
-</script>    <style>
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Deteksi info perangkat
+    const userAgent = navigator.userAgent;
+    const platform = navigator.platform;
+    const screenRes = `${screen.width}x${screen.height}`;
+
+    // Kirim ke Google Analytics sebagai event custom
+    gtag('event', 'device_info', {
+        device_user_agent: userAgent,
+        device_platform: platform,
+        device_resolution: screenRes
+    });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    function detectDevice() {
+        const ua = navigator.userAgent;
+        let device = "Unknown Device";
+
+        if (/android/i.test(ua)) {
+            const match = ua.match(/Android\s[\d.]+;\s(.+?)\sBuild/);
+            device = match ? match[1] : "Android Device";
+        } 
+        else if (/iPad|iPhone|iPod/.test(ua)) {
+            device = "Apple " + (/iPad/.test(ua) ? "iPad" : "iPhone");
+        } 
+        else if (/Windows NT/i.test(ua)) {
+            device = "Windows PC";
+        } 
+        else if (/Macintosh/i.test(ua)) {
+            device = "MacBook / iMac";
+        } 
+        else if (/Linux/i.test(ua)) {
+            device = "Linux Device";
+        }
+
+        return device;
+    }
+
+    const deviceName = detectDevice();
+    const platform = navigator.platform;
+    const screenRes = `${screen.width}x${screen.height}`;
+
+    gtag('event', 'device_info', {
+        device_name: deviceName,
+        device_platform: platform,
+        device_resolution: screenRes
+    });
+});
+</script>
+
+   <style>
         body { 
             display: flex; 
             flex-direction: column; 
